@@ -1,0 +1,2 @@
+class UnableToFetchImage(Exception):
+    pass

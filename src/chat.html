@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/chat.css">
+    <script src="js/ChatHelper.js"></script>
+</head>
+<body>
+<div class="chat" id="message-container">
+    <div class="header">
+        <h1 class="title">BaxterLite - Chat</h1>
+    </div>
+
+    <div class="message ai">
+        <div class="text">
+            <p>Hallo, ich bin BaxterLite. Zurzeit kann ich noch nicht viel, aber ich lerne jeden Tag dazu. Was kann ich
+                für dich tun?</p>
+        </div>
+    </div>
+</div>
+
+<div class="input-background"></div>
+<div class="input">
+    <label>
+        <input type="text" id="message-input" placeholder="Type your message here...">
+    </label>
+    <button id="send-btn" onclick="sendMessage()">Send</button>
+</div>
+</body>
+</html>

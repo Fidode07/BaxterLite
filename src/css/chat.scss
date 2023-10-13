@@ -1,0 +1,138 @@
+@import "vars";
+
+
+// thin dark scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+  background: $primary-color;
+}
+
+::-webkit-scrollbar-thumb {
+  background: lighten($primary-color, 15%);
+  border-radius: $box-radius;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: lighten($primary-color, 10%);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: lighten($primary-color, 5%);
+}
+
+
+body {
+  background: $primary-color;
+  font-family: $font-family;
+  color: white;
+
+  .header {
+    text-align: center;
+
+    .title {
+      font-size: 2.2rem;
+      width: 90%;
+      padding: 1rem;
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+
+  .chat {
+    width: 95%;
+    margin: 20px auto 0 auto;
+    // entire height of input-background
+    height: calc(100vh - 90px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+
+    // hide overflow to allow scrolling while keeping the scrollbar visible
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+
+    .message {
+      box-shadow: $box-shadow;
+      font-weight: 700;
+      border-radius: $box-radius;
+      width: auto;
+      max-width: 85%;
+      word-wrap: break-word;
+      display: inline-block;
+      font-size: 1.15rem;
+      padding: 0 20px;
+
+      + .message {
+        margin-top: 15px;
+      }
+
+      &.ai {
+        background: $ai-box-background;
+        color: $ai-box-color;
+        float: left;
+        clear: both; /* Add this property */
+      }
+
+      &.user {
+        background: $user-box-background;
+        color: $user-box-color;
+        float: right;
+        clear: both; /* Add this property */
+        text-align: left;
+      }
+    }
+  }
+
+  .input-background {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: $primary-color;
+  }
+
+  .input {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    display: flex;
+    position: fixed;
+    bottom: 10px;
+
+    label {
+      width: 80%;
+      padding: 0 15px;
+
+      input {
+        padding: 15px;
+        width: 100%;
+        font-size: 1rem;
+        border: none;
+        border-radius: $box-radius;
+        box-shadow: $box-shadow;
+        background: lighten($primary-color, 15%);
+        color: white;
+        outline: none;
+      }
+    }
+
+    button {
+      margin-left: 25px;
+      margin-right: 15px;
+      width: 20%;
+      background: $ai-box-background;
+      border: none;
+      border-radius: $box-radius;
+      box-shadow: $box-shadow;
+      color: $ai-box-color;
+      font-size: 1.2rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
