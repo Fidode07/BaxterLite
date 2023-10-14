@@ -2,6 +2,9 @@ import logging
 from utils.action_utils import ActionUtils
 from utils.itf.itf import TokenDetector, PositionPrediction
 from typing import *
+import ytmusicapi as yt_api
+import webbrowser as wb
+import os
 
 
 class PlaySongAction:
@@ -26,6 +29,32 @@ class PlaySongAction:
             platform_name: str = action_utils.get_part_by_indexes(input_str, platform_indexes[0], platform_indexes[1])
 
             response: str = self.__get_response(main_str, song_name, artist_name, platform_name)
+
+            if song_name:
+                tg_platform: str = platform_name if platform_name else 'youtube'
+
+                # TODO: Implement more platform support
+                if tg_platform == 'youtube':
+                    if not self.__yt_credentials_exist():
+                        return 'Tut mir leid, du musst BaxterLite zuerst mit deinem YouTube Account verbinden. ' \
+                               'Klicke dazu auf das BaxterLite Icon in der Taskleiste und wähle "YouTube Account ' \
+                               'verbinden" aus.'
+                        # TODO: Implement YouTube OAuth2.0
+
+                    yt = yt_api.YTMusic('oauth.json')
+                    q: str = song_name
+                    if artist_name:
+                        q += ' - ' + artist_name
+                    search_results = yt.search(query=q)
+                    if not search_results:
+                        return error_str
+                    if len(search_results) < 1:
+                        return error_str
+                    song = search_results[1]
+                    yt_song_id = song['videoId']
+                    url: str = 'https://music.youtube.com/watch?v=' + yt_song_id
+                    wb.open(url, new=2)
+
             if not response:
                 return error_str
             return response
@@ -47,3 +76,7 @@ class PlaySongAction:
             return main_str.format(song_name=song_name, artist_name='Unknown', platform_name=platform_name)
         # possible: nothing
         return None
+
+    @staticmethod
+    def __yt_credentials_exist() -> bool:
+        return os.path.exists('oauth.json')
