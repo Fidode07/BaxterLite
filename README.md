@@ -1,5 +1,7 @@
 # 🔊 BaxterLite 🔊
-What is Baxter? Baxter is a voice assistant that is supposed to help me here and there. It will probably be converted to an API later, or be accessible via a WebSocket. So it will be accessible via Arduinos, mobile apps and more. Currently he <strong>only speaks german</strong>.
+What is Baxter? Baxter is a voice assistant that is supposed to help me here and there (currently chat based). It will probably be converted to an API later, or be accessible via a WebSocket. So it will be accessible via Arduinos, mobile apps and more. Currently he <strong>only speaks german</strong>.
+
+Please note that BaxterLite is a project designed for easy extension and has a lot of helper functions and classes. You should definitely read the README before implementing your own features, as they will probably save you a lot of work in the end.
 
 # 📙 What it can 📙
 Since Baxter is only a side project and I also only add features that I can use myself, it is relatively small. Therefore also the Lite. His features:
