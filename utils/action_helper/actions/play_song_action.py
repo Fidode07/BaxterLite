@@ -35,13 +35,15 @@ class PlaySongAction:
 
                 # TODO: Implement more platform support
                 if tg_platform == 'youtube':
-                    if not self.__yt_credentials_exist():
-                        return 'Tut mir leid, du musst BaxterLite zuerst mit deinem YouTube Account verbinden. ' \
-                               'Klicke dazu auf das BaxterLite Icon in der Taskleiste und wähle "YouTube Account ' \
-                               'verbinden" aus.'
-                        # TODO: Implement YouTube OAuth2.0
 
-                    yt = yt_api.YTMusic('oauth.json')
+                    if not self.__yt_credentials_exist():
+                        logging.info('No YouTube credentials found. Resuming unauthenticated.')
+                        # TODO: Implement YouTube OAuth2.0
+                    if self.__yt_credentials_exist():
+                        yt = yt_api.YTMusic('oauth.json')
+                    else:
+                        yt = yt_api.YTMusic()
+
                     q: str = song_name
                     if artist_name:
                         q += ' - ' + artist_name
