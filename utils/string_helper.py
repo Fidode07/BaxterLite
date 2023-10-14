@@ -69,12 +69,13 @@ class StringHelper:
     def __init__(self, model: Model) -> None:
         self.__model: Model = model
         self.wv: dict = gensim_api.load(model.name)
+        self.__stemmer: nltk.PorterStemmer = nltk.PorterStemmer()
 
     @staticmethod
     def tokenize(text: str) -> list:
         """
         :param text: string - text to be tokenized
-        :return: returns text splittet into a list of tokens
+        :return: returns text split into a list of tokens
         """
         return word_tokenize(text)
 
@@ -85,7 +86,17 @@ class StringHelper:
         """
         return self.wv[w]
 
+    def stem(self, w: str) -> str:
+        """
+        :param w: string - word to be stemmed
+        :return: string - returns the stemmed word
+        """
+        return self.__stemmer.stem(w)
+
     def get_dimensions(self) -> int:
+        """
+        :return: int - returns the dimensions of the Word2Vec model
+        """
         return self.__model.dimensions
 
     def get_token_length(self, s: str) -> int:
@@ -107,6 +118,7 @@ class StringHelper:
         for token in self.tokenize(s):
             if token in ['?', '!', '.', ',']:
                 continue
+            token: str = self.stem(token)
             try:
                 current_sentence.append(self.w2v(token))
             except (KeyError,):
@@ -125,4 +137,7 @@ class StringHelper:
             (1, current_sentence.shape[0], current_sentence.shape[1]))
 
     def get_model_name(self) -> str:
+        """
+        :return: string - returns the name of the Word2Vec model
+        """
         return self.__model.name

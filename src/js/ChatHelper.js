@@ -34,6 +34,10 @@ function handleMessage(inputMessage) {
     // Send message to backend
     pywebview.api.get_response(inputMessage).then(function (response) {
         // enable button and input field
+        if (!response.response) {
+            setUiDisabled(false);
+            return; // happens when action is not returning a response
+        }
         pushMessage(response.response, 'ai');
         // enable button and input field
         setUiDisabled(false);

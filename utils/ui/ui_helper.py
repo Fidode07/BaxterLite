@@ -59,13 +59,11 @@ class Ui:
         :return: dict -> {'response': str} -> response to the message
         """
         classified: Prediction = self.__classifier.classify(message)
-        if classified.tag == 'stopword':
-            return {'response': 'That is not looking like a question to me, or I dont have data to answer it. Sorry.'}
         result: str = self.__action_helper.try_action(message,
                                                       classified.action,
                                                       classified.main_str,
                                                       classified.error_str)
-        return {'response': result if result else ''}
+        return {'response': result if result else None}
 
     def __calculate_window_position(self) -> tuple:
         screen: tuple = tuple([int(val) for val in str(webview.screens[0])[:-1][1:].split(', ')])

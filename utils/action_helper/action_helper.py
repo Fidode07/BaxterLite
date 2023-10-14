@@ -16,11 +16,19 @@ class ActionHelper:
             'check_fightclub_room2': fightclub_action.FightclubAction(),
             'get_current_time': current_time_action.CurrentTimeAction(),
             'greet_user': greet_action.GreetAction(),
-            'play_song': play_song_action.PlaySongAction(),
-            'stopword-detected': lambda m, e: None,
+            'play_song': play_song_action.PlaySongAction()
         }
 
-    def try_action(self, input_str: str, action_key: str, main_str: str, error_str: str) -> str:
+    def try_action(self, input_str: str, action_key: str, main_str: str, error_str: str) -> Any:
+        """
+        :param input_str: string - input string of the user
+        :param action_key: string - action key also known as action name
+        :param main_str: string - main response string of action (randomly chosen from patterns list)
+        :param error_str: string - error response string of action
+        :return: Any - response of action, should be a string
+        """
+        if action_key == 'stopword-detected':
+            return None
         if action_key is None:
             return main_str
         action: Callable = self.__actions.get(action_key)
@@ -31,8 +39,6 @@ class ActionHelper:
         try:
             return action.get_response(input_str, main_str, error_str, self.__action_utils)  # noqa
         except AttributeError:
-            if action_key == 'stopword-detected':
-                return ''
             raise Exception(f'Action {action_key} has no get_response method')
         except Exception as e:
             logging.error(['[ActionHelper -> try_action]', 'While trying to execute action', action_key, e])
