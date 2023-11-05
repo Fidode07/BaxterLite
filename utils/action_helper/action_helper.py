@@ -1,5 +1,5 @@
 from utils.action_helper.actions import fightclub_action, current_time_action, greet_action, play_song_action, \
-    clear_chat_action, tell_joke_action, repeat_action
+    clear_chat_action, tell_joke_action, repeat_action, open_website_action
 from utils.config_helper import ConfigHelper
 from utils.action_utils import ActionUtils, TriggerInfos
 from utils.intent_classifier import Classifier
@@ -23,7 +23,8 @@ class ActionHelper:
             'play_song': play_song_action.PlaySongAction(),
             'clear_chat': clear_chat_action.ClearChatAction(),
             'tell_joke': tell_joke_action.TellJokeAction(),
-            'repeat': repeat_action.RepeatAction()
+            'repeat': repeat_action.RepeatAction(),
+            'open_website': open_website_action.OpenWebsiteAction(),
         }
 
     def action_exists(self, action_key: str) -> bool:

@@ -191,14 +191,3 @@ class TokenDetector:
                                       metrics=['accuracy'])
         self.__token_detector.fit(features, labels, epochs=epochs, batch_size=batch_size, validation_split=.2)
         self.__token_detector.save(f'models/pretrained/token_detector-{self.__str_helper.get_model_name()}.h5')
-
-    # model_helper: Word2VecModels = Word2VecModels()
-# target_model: Model = model_helper.get_smallest_model()
-# str_helper: StringHelper = StringHelper(target_model)
-#
-# token_finder: TokenDetector = TokenDetector(str_helper, ['../datasets/itf/web-intents.json'], use_pretrained=True)
-# # For 8GB VRAM and 16GB RAM and RTX 3050 we can use higher batch sizes
-# token_finder.train(epochs=50, batch_size=256)
-#
-# test_sentence: str = 'open google.com in firefox'
-# print(token_finder.get_token(test_sentence))
