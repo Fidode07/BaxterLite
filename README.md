@@ -15,6 +15,9 @@ Therefore also the Lite. His features:
 
 - Tell me when room 2 is free in my gym
 - Get current time
+- Clear the chat
+- Repeat the last action
+- Tell you a joke
 - Say hello
 - Say bye
 
