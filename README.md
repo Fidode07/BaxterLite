@@ -18,6 +18,7 @@ Therefore, also the Lite. His features:
 - Clear the chat
 - Repeat the last action
 - Tell you a joke
+- Open a website
 - Say hello
 - Say bye
 
