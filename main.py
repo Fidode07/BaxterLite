@@ -33,16 +33,9 @@ def main() -> None:
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
     init_model(classifier, 500)
+    classifier.train(epochs=250)
 
     action_helper: ActionHelper = ActionHelper(config_helper=config_helper, token_detector=token_detector)
-
-    # while True:
-    #     to_classify: str = input('_> ')
-    #     classified: Prediction = classifier.classify(to_classify)
-    #     result: str = action_helper.try_action(classified.action,
-    #                                            classified.main_str,
-    #                                            classified.error_str)
-    #     print(result) if result else None
 
     ui_title: str = config_helper.get_config_setting('ui_title')
     ui_width: int = config_helper.get_config_setting('ui_width')

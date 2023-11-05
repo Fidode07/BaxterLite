@@ -76,6 +76,7 @@ class Classifier:
 
     def train(self, epochs: int = 500, batch_size: int = 64) -> None:
         """
+        Trains the intent detector (Note that if a pretrained model is available the training continues on that model)
         :param epochs: int - number of epochs
         :param batch_size: int - how many samples to train on at once
         :return: None

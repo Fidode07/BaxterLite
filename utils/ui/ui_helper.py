@@ -62,7 +62,8 @@ class Ui:
         result: str = self.__action_helper.try_action(message,
                                                       classified.action,
                                                       classified.main_str,
-                                                      classified.error_str)
+                                                      classified.error_str,
+                                                      self.__window)
         return {'response': result if result else None}
 
     def __calculate_window_position(self) -> tuple:

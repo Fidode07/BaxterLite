@@ -40,7 +40,8 @@ class FightclubAction:
         self.__cache_file: str = os.path.join(os.path.dirname(__file__), 'cache',
                                               self.__class__.__name__.lower() + '.json')
 
-    def get_response(self, _: str, main_response: str, error_str: str, action_utils: ActionUtils) -> str:
+    def get_response(self, _: str, main_response: str, error_str: str, action_utils: ActionUtils,
+                     __: object) -> str:
         config_helper: ConfigHelper = action_utils.get_config_helper()
 
         pytesseract.pytesseract.tesseract_cmd = config_helper.get_config_setting('tesseract_path')

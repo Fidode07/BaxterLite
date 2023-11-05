@@ -48,6 +48,14 @@ function handleMessage(inputMessage) {
     });
 }
 
+function clear_chat() {
+    const messageContainer = document.getElementById('message-container');
+    let children = messageContainer.children;
+    // remove all children except the first one
+    for (let i = children.length - 1; i > 0; i--) {
+        messageContainer.removeChild(children[i]);
+    }
+}
 
 function sendMessage() {
     const messageContainer = document.getElementById('message-container');

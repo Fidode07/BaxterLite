@@ -8,7 +8,8 @@ import os
 
 
 class PlaySongAction:
-    def get_response(self, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils) -> str:
+    def get_response(self, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
+                     __: object) -> str:
         try:
             token_detector: TokenDetector = action_utils.get_token_detector()
             position_prediction: PositionPrediction = token_detector.get_important_parts(input_str)
