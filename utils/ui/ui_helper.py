@@ -1,4 +1,6 @@
 import webview
+
+from utils.config_helper import ConfigHelper
 from utils.intent_classifier import Classifier, Prediction
 from utils.action_helper.action_helper import ActionHelper
 from utils.action_utils import TriggerInfos
@@ -7,7 +9,7 @@ from typing import *
 
 class Ui:
     def __init__(self, title: str, width: int, height: int, classifier: Classifier,
-                 action_helper: ActionHelper) -> None:
+                 action_helper: ActionHelper, config_helper: ConfigHelper) -> None:
         """
         :param title: str -> title of the window
         :param width: int -> width of the window
@@ -25,6 +27,8 @@ class Ui:
 
         self.__classifier: Classifier = classifier
         self.__action_helper: ActionHelper = action_helper
+        self.__config_helper: ConfigHelper = config_helper
+
         self.__currently_ui_open: bool = False
 
         self.__window.events.shown += self.__on_window_shown
@@ -69,7 +73,10 @@ class Ui:
         try:
             classified: Prediction = self.__classifier.classify(message)
         except (Exception,):
-            return {'response': 'Tut mir leid, ich habe dich nicht verstanden. Vielleicht war deine Eingabe zu lang.'}
+            error_str: str = self.__config_helper.get_config_setting('classifier_error_str')
+            if error_str:
+                return {'response': error_str}
+            return {'response': 'Sorry, I did not understand that. Maybe your input was too long.'}
         result: str = self.__action_helper.try_action(message,
                                                       classified.action,
                                                       classified.main_str,

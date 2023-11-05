@@ -33,7 +33,7 @@ def main() -> None:
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
     init_model(classifier, 200)
-    # classifier.train(epochs=500)
+    classifier.train(epochs=250)
 
     action_helper: ActionHelper = ActionHelper(config_helper=config_helper,
                                                token_detector=token_detector,
@@ -43,7 +43,8 @@ def main() -> None:
     ui_width: int = config_helper.get_config_setting('ui_width')
     ui_height: int = config_helper.get_config_setting('ui_height')
 
-    ui: Ui = Ui(title=ui_title, width=ui_width, height=ui_height, classifier=classifier, action_helper=action_helper)
+    ui: Ui = Ui(title=ui_title, width=ui_width, height=ui_height, classifier=classifier, action_helper=action_helper,
+                config_helper=config_helper)
     Thread(target=TrayHelper.run_from_thread, args=(ui,)).start()
     webview.start()
 

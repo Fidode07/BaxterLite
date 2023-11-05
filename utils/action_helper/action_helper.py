@@ -1,5 +1,5 @@
-from utils.action_helper.actions import fightclub_action, current_time_action, greet_action, play_song_action, \
-    clear_chat_action, tell_joke_action, repeat_action, open_website_action
+from utils.action_helper.actions import current_time_action, greet_action, play_song_action, clear_chat_action, \
+    tell_joke_action, repeat_action, open_website_action
 from utils.config_helper import ConfigHelper
 from utils.action_utils import ActionUtils, TriggerInfos
 from utils.intent_classifier import Classifier
@@ -17,7 +17,6 @@ class ActionHelper:
                                                        classifier=classifier)
 
         self.__actions: dict = {
-            'check_fightclub_room2': fightclub_action.FightclubAction(),
             'get_current_time': current_time_action.CurrentTimeAction(),
             'greet_user': greet_action.GreetAction(),
             'play_song': play_song_action.PlaySongAction(),

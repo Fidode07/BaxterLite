@@ -61,43 +61,6 @@
       "error_msg": null
     },
     {
-      "tag": "fightclub-times",
-      "patterns": [
-        "ist der boxraum im fightclub gerade frei?",
-        "kann ich jetzt den boxraum im fightclub nutzen?",
-        "ist der boxraum im fightclub im moment verfügbar?",
-        "gibt es gerade freie plätze im boxraum des fightclubs?",
-        "ist der boxraum im fightclub gerade ausgebucht?",
-        "könnte ich den boxraum im fightclub jetzt reservieren?",
-        "ist der boxraum im fightclub für das aktuelle training verfügbar?",
-        "gibt es zurzeit boxtraining im fightclub?",
-        "ist der boxraum im fightclub im moment besetzt?",
-        "kann ich gerade im fightclub boxen?",
-        "gibt es freie plätze im boxraum des fightclubs?",
-        "kann ich jetzt im fightclub trainieren?",
-        "ist raum 2 im fightclub gerade frei?",
-        "kann ich jetzt raum 2 im fightclub nutzen?",
-        "ist raum 2 im fightclub im moment verfügbar?",
-        "gibt es gerade freie plätze in raum 2 des fightclubs?",
-        "ist raum 2 im fightclub gerade ausgebucht?",
-        "könnte ich raum 2 im fightclub jetzt reservieren?",
-        "ist raum 2 im fightclub für das aktuelle training verfügbar?",
-        "gibt es zurzeit boxtraining in raum 2 des fightclubs?",
-        "ist raum 2 im fightclub im moment besetzt?",
-        "kann ich gerade in raum 2 des fightclubs boxen?",
-        "gibt es freie plätze in raum 2 des fightclubs?",
-        "kann ich jetzt in raum 2 des fightclubs trainieren?",
-        "ist raum 2 im fightclub belegt?"
-      ],
-      "responses": [
-        "Laut Internet ist {status_msg}",
-        "Laut Homepage ist {status_msg}",
-        "Laut Website ist {status_msg}"
-      ],
-      "error_msg": "Etwas ist schiefgelaufen, tut mir leid.",
-      "action": "check_fightclub_room2"
-    },
-    {
       "tag": "current_time",
       "patterns": [
         "was zeigt die uhr?",

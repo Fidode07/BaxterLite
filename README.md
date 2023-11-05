@@ -13,7 +13,6 @@ the end.
 Since Baxter is only a side project and I also only add features that I can use myself, it is relatively small.
 Therefore, also the Lite. His features:
 
-- Tell me when room 2 is free in my gym
 - Get current time
 - Clear the chat
 - Repeat the last action
@@ -209,7 +208,7 @@ The class contains the following functions:
   for in the config. It does <strong>not check the value</strong> of this key, but whether the key exists at all.
 
   Then comes <strong>{name}</strong>. Here the value of the key name is fetched from the Config and inserted. After that
-  the if statement is <strong>closed with a %if_name_end%</strong>. Here the key <strong>MUST</strong> be the same as
+  the if statement is <strong>closed with an %if_name_end%</strong>. Here the key <strong>MUST</strong> be the same as
   when opening.
 
   A simple action that handles these if statements looks like this:
@@ -224,15 +223,15 @@ The class contains the following functions:
       return result
   ```
 - get_token_detector() -> TokenDetector
-      Returns an instance of the TokenDetector class
-      Example:
-    
-    ```py
-    class OpenWebsiteAction:
+  Returns an instance of the TokenDetector class
+  Example:
+
+  ```py
+  class OpenWebsiteAction:
     @classmethod
     def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
       token_detector: TokenDetector = action_utils.get_token_detector()
-    ```
+  ```
 
 # ©️ Copyright ©️
 

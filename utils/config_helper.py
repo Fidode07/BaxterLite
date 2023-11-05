@@ -17,6 +17,12 @@ class ConfigHelper:
         return setting in self.__config_data
 
     def get_config_setting(self, setting: str) -> Any:
+        """
+        This method returns the value of the setting specified in the parameter if it exists. If it doesn't exist, it
+        returns None.
+        :param setting: Key/name of the setting
+        :return: Value of the setting (can also be None)
+        """
         return self.__config_data.get(setting, None)
 
     def set_config_setting(self, setting: str, value: Union[str, int, None]) -> None:
