@@ -1,6 +1,6 @@
 import webview
 from utils.action_helper.actions import fightclub_action, current_time_action, greet_action, play_song_action, \
-    clear_chat_action
+    clear_chat_action, tell_joke_action
 from utils.config_helper import ConfigHelper
 from utils.action_utils import ActionUtils
 from utils.itf.itf import TokenDetector
@@ -19,7 +19,8 @@ class ActionHelper:
             'get_current_time': current_time_action.CurrentTimeAction(),
             'greet_user': greet_action.GreetAction(),
             'play_song': play_song_action.PlaySongAction(),
-            'clear_chat': clear_chat_action.ClearChatAction()
+            'clear_chat': clear_chat_action.ClearChatAction(),
+            'tell_joke': tell_joke_action.TellJokeAction(),
         }
 
     def try_action(self, input_str: str, action_key: str, main_str: str, error_str: str,
