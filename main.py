@@ -32,7 +32,7 @@ def main() -> None:
     # and the training process takes a lot of time.
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
-    init_model(classifier, 500)
+    init_model(classifier, 200)
     # classifier.train(epochs=500)
 
     action_helper: ActionHelper = ActionHelper(config_helper=config_helper,

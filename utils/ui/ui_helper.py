@@ -66,8 +66,10 @@ class Ui:
         :param message: str -> message to classify
         :return: dict -> {'response': str} -> response to the message
         """
-        classified: Prediction = self.__classifier.classify(message)
-
+        try:
+            classified: Prediction = self.__classifier.classify(message)
+        except (Exception,):
+            return {'response': 'Tut mir leid, ich habe dich nicht verstanden. Vielleicht war deine Eingabe zu lang.'}
         result: str = self.__action_helper.try_action(message,
                                                       classified.action,
                                                       classified.main_str,
