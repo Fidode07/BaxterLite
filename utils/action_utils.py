@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 import webview
-
 from utils.config_helper import ConfigHelper
+from utils.intent_classifier import Prediction
 from utils.itf.itf import TokenDetector
 from typing import *
 import re
@@ -13,12 +13,21 @@ class TriggerInfos:
     # Util class to pass infos about the current trigger of an action
     ui: webview.Window
     last_action: Union[str, None]
+    last_input: Union[str, None]
 
 
 class ActionUtils:
-    def __init__(self, config_helper: ConfigHelper, token_detector: TokenDetector) -> None:
+    def __init__(self, config_helper: ConfigHelper, token_detector: TokenDetector, action_helper, classifier) -> None:
         self.__config_helper: ConfigHelper = config_helper
         self.__token_detector: TokenDetector = token_detector
+        self.__action_helper = action_helper
+        self.__classifier = classifier
+
+    def get_classifier(self):
+        return self.__classifier
+
+    def get_action_helper(self):
+        return self.__action_helper
 
     def get_config_helper(self) -> ConfigHelper:
         return self.__config_helper

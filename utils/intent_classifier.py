@@ -19,6 +19,12 @@ class Prediction:
     error_str: Optional[str] = None
 
 
+@dataclass
+class Intent:
+    main_str: str
+    error_str: str
+
+
 class Classifier:
     def __init__(self, config_helper: ConfigHelper, str_helper: StringHelper, intent_path: str,
                  use_pretrained: bool = False) -> None:
@@ -42,6 +48,12 @@ class Classifier:
         for idx, intent in enumerate(self.__dataset['intents']):
             tag: str = intent['tag']
             self.__tags[idx] = tag
+
+    def get_intent_by_action(self, action: str) -> Union[Intent, None]:
+        for intent in self.__dataset['intents']:
+            if intent['action'] == action:
+                return Intent(intent['responses'][0], intent['error_msg'])
+        return None
 
     def is_usable(self) -> bool:
         return self.__intent_detector is not None

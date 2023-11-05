@@ -31,6 +31,7 @@ class Ui:
         self.__window.events.closing += self.__on_window_closed
 
         self.__last_action: Union[str, None] = None
+        self.__last_input: Union[str, None] = None
 
     def open_ui(self) -> None:
         # if the ui is already open
@@ -58,7 +59,7 @@ class Ui:
         return self.__window
 
     def __build_last_trigger_data(self) -> TriggerInfos:
-        return TriggerInfos(ui=self.__window, last_action=self.__last_action)
+        return TriggerInfos(ui=self.__window, last_action=self.__last_action, last_input=self.__last_input)
 
     def get_response(self, message: str) -> dict:
         """
@@ -72,6 +73,7 @@ class Ui:
                                                       classified.main_str,
                                                       classified.error_str,
                                                       self.__build_last_trigger_data())
+        self.__last_input = message
         if self.__action_helper.action_exists(classified.action):
             self.__last_action = classified.action
         else:

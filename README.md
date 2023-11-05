@@ -136,6 +136,7 @@ The TriggerInfos class is a class that contains some useful information about th
 
 - <strong>ui</strong>: webview.Window (the window from which the trigger was made)
 - <strong>last_action</strong>: str | None (the last action that was executed)
+- <strong>last_input</strong>: str | None (the last input that was executed)
 
 # 🛠️ ActionUtils 🛠️
 
@@ -218,6 +219,16 @@ The class contains the following functions:
       result: str = action_utils.handle_if_statements(main_str) # since name exists in Config it will result in "Hello, Fido!" otherwhise it would end in "Hello!"
       return result
   ```
+- get_token_detector() -> TokenDetector
+      Returns an instance of the TokenDetector class
+      Example:
+    
+    ```py
+    class OpenWebsiteAction:
+    @classmethod
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
+      token_detector: TokenDetector = action_utils.get_token_detector()
+    ```
 
 # ©️ Copyright ©️
 

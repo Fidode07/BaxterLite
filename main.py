@@ -33,9 +33,11 @@ def main() -> None:
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
     init_model(classifier, 500)
-    classifier.train(epochs=250)
+    classifier.train(epochs=500)
 
-    action_helper: ActionHelper = ActionHelper(config_helper=config_helper, token_detector=token_detector)
+    action_helper: ActionHelper = ActionHelper(config_helper=config_helper,
+                                               token_detector=token_detector,
+                                               classifier=classifier)
 
     ui_title: str = config_helper.get_config_setting('ui_title')
     ui_width: int = config_helper.get_config_setting('ui_width')

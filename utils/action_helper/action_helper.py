@@ -1,18 +1,20 @@
-import webview
 from utils.action_helper.actions import fightclub_action, current_time_action, greet_action, play_song_action, \
-    clear_chat_action, tell_joke_action
+    clear_chat_action, tell_joke_action, repeat_action
 from utils.config_helper import ConfigHelper
 from utils.action_utils import ActionUtils, TriggerInfos
+from utils.intent_classifier import Classifier
 from utils.itf.itf import TokenDetector
 from typing import *
 import logging
 
 
 class ActionHelper:
-    def __init__(self, config_helper: ConfigHelper, token_detector: TokenDetector) -> None:
+    def __init__(self, config_helper: ConfigHelper, token_detector: TokenDetector, classifier: Classifier) -> None:
         self.__config_helper: ConfigHelper = config_helper
         self.__action_utils: ActionUtils = ActionUtils(config_helper=config_helper,
-                                                       token_detector=token_detector)
+                                                       token_detector=token_detector,
+                                                       action_helper=self,
+                                                       classifier=classifier)
 
         self.__actions: dict = {
             'check_fightclub_room2': fightclub_action.FightclubAction(),
@@ -21,6 +23,7 @@ class ActionHelper:
             'play_song': play_song_action.PlaySongAction(),
             'clear_chat': clear_chat_action.ClearChatAction(),
             'tell_joke': tell_joke_action.TellJokeAction(),
+            'repeat': repeat_action.RepeatAction()
         }
 
     def action_exists(self, action_key: str) -> bool:
