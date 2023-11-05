@@ -77,7 +77,8 @@ class Ui:
                                                       self.__build_last_trigger_data())
         self.__last_input = message
         if self.__action_helper.action_exists(classified.action):
-            self.__last_action = classified.action
+            if not classified.action == 'repeat':
+                self.__last_action = classified.action
         else:
             self.__last_action = None
 
