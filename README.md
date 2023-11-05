@@ -50,7 +50,7 @@ in ``utils/action_helper/actions/<name-of-action>-action.py``. To add your own a
 
   ```py
   class SomeAction:
-      def get_response(self, input_str, main_response: str, error_str: str, action_utils: ActionUtils, ui_window: webview.Window) -> str:
+      def get_response(self, input_str, main_response: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
           return main_response
   ```
   <strong>Note that ALL actions must have the function ``get_response``!</strong>
@@ -63,8 +63,8 @@ in ``utils/action_helper/actions/<name-of-action>-action.py``. To add your own a
     - <strong>error_str</strong>: String (the response that the user gets when the action went wrong)
     - <strong>action_utils</strong>: ActionUtils Class (a class that contains some useful functions, e.g. to find
       important parts in the user input)
-    - <strong>ui_window</strong>: webview.Window (the window of the UI, you can use it to execute JavaScript code, e.g.
-      to change the UI)
+    - <strong>trigger_infos</strong>: TriggerInfos Class (a class that contains some useful information about the
+      trigger, e.g. the confidence of the classifier)
 - The code is ready and working? You have a get_response? Cool! Now we need to tell the action_helper that you created
   an action. For this we simply go to ``utils/action_helper/action_helper.py`` and first to the init method. There will
   be a dictionary that looks something like this:
@@ -129,6 +129,14 @@ in ``utils/action_helper/actions/<name-of-action>-action.py``. To add your own a
 
 Pouh, that was a long tutorial. Anyway, now you can just launch the application and call the action.
 
+# 🛠️ TriggerInfos 🛠️
+
+The TriggerInfos class is a class that contains some useful information about the trigger. You can find it under
+``utils/action_utils/``. The class is a data class and contains the following attributes:
+
+- <strong>ui</strong>: webview.Window (the window from which the trigger was made)
+- <strong>last_action</strong>: str | None (the last action that was executed)
+
 # 🛠️ ActionUtils 🛠️
 
 The ActionUtils class is a class that contains some useful functions. You can find it under ``utils/action_utils.py``.
@@ -158,10 +166,9 @@ The class contains the following functions:
   Example:
 
   ```py
-  import webview
   class OpenWebsiteAction:
     @classmethod
-    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, ui_window: webview.Window) -> str:
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
         config_helper: ConfigHelper = action_utils.get_config_helper()
   ```
 - get_part_by_indexes(string, int, int) -> str
@@ -172,7 +179,7 @@ The class contains the following functions:
   ```py
   class OpenWebsiteAction:
     @classmethod
-    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, ui_window: webview.Window) -> str:
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
         test_str: str = 'This is an example sentence' # goal is to get "example sentence"
         start_idx: 3
         end_idx: 4
@@ -206,7 +213,7 @@ The class contains the following functions:
   import webview
   class GreetAction:
     @classmethod
-    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, ui_window: webview.Window) -> str:
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
       test_str: str = 'Hello%if_name%, {name}%if_name_end%!'      
       result: str = action_utils.handle_if_statements(main_str) # since name exists in Config it will result in "Hello, Fido!" otherwhise it would end in "Hello!"
       return result

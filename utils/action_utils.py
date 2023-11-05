@@ -1,7 +1,18 @@
+from dataclasses import dataclass
+
+import webview
+
 from utils.config_helper import ConfigHelper
 from utils.itf.itf import TokenDetector
 from typing import *
 import re
+
+
+@dataclass
+class TriggerInfos:
+    # Util class to pass infos about the current trigger of an action
+    ui: webview.Window
+    last_action: Union[str, None]
 
 
 class ActionUtils:
