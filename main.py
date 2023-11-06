@@ -27,15 +27,18 @@ def main() -> None:
     str_helper: StringHelper = StringHelper(target_model)
     token_detector: TokenDetector = TokenDetector(config_helper=config_helper, str_helper=str_helper,
                                                   intent_paths=['datasets/itf/output-dataset.json',
-                                                                'datasets/itf/domain_dataset.json'],
+                                                                # 'datasets/itf/domain_dataset.json'],
+                                                                ],
                                                   use_pretrained=True)
-    # init_model(token_detector,
-    #           25)  # NOTE: You should always prefer the pretrained model since it is trained on a huge dataset
+    # TODO: Add downloader for domain_dataset.json
+    init_model(token_detector,
+               25)  # NOTE: You should always prefer the pretrained model since it is trained on a huge dataset
     # and the training process takes a lot of time.
-    token_detector.train(epochs=10, train_on_pretrained=True)
+    # token_detector.train(epochs=10, train_on_pretrained=True)
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
     init_model(classifier, 200)
+    classifier.train(epochs=200)
 
     action_helper: ActionHelper = ActionHelper(config_helper=config_helper,
                                                token_detector=token_detector,
