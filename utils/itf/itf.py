@@ -150,12 +150,14 @@ class TokenDetector:
                 features.append(
                     self.__str_helper.get_insertable(sentence, self.__max_token_length).astype(np.float32))
                 # break after 100 entries to speed up training
-                if idx > 50_000:
+                if idx > 165_000:
                     break
             del dataset
 
         features: np.ndarray = np.array(features)
         labels: np.ndarray = np.array(labels)
+
+        print(len(features))
 
         # Shuffle the features and labels
         c: list = list(zip(features, labels))
@@ -177,14 +179,16 @@ class TokenDetector:
             logging.warning('No pretrained model found. Training a new one ...')
 
         # Create the model
-        self.__token_detector = keras.Sequential([
-            keras.layers.LSTM(128 * 2, input_shape=(self.__max_token_length, self.__str_helper.get_dimensions()),
-                              return_sequences=True, activation='relu'),
-            keras.layers.Dropout(.2),
-            keras.layers.LSTM(128 * 2, activation='relu'),
-            keras.layers.Dropout(.2),
-            keras.layers.Dense(64 * 2, activation='relu'),
-            keras.layers.Dense(12)
+        self.__token_detector: keras.Sequential = keras.Sequential([
+            keras.layers.LSTM(128, return_sequences=True,
+                              input_shape=(self.__max_token_length, self.__str_helper.get_dimensions())),
+            keras.layers.Dropout(0.2),
+            keras.layers.LSTM(128, return_sequences=True),
+            keras.layers.Dropout(0.2),
+            keras.layers.LSTM(128),
+            keras.layers.Dropout(0.2),
+            keras.layers.Dense(64, activation='relu'),
+            keras.layers.Dense(12)  # 12 Ausgänge für die Positionen im Text
         ])
 
         self.__token_detector.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mean_squared_error',

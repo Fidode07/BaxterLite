@@ -64,6 +64,13 @@ class Word2VecModels:
         """
         return self.__models[len(self.__models) - 1]
 
+    def get_model_by_idx(self, idx: int) -> Model:
+        """
+        :param idx: int - index of the target model
+        :return: StringHelper.Model - returns target model
+        """
+        return self.__models.get(idx, None)
+
 
 class StringHelper:
     def __init__(self, model: Model) -> None:

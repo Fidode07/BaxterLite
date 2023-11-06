@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 import webview
 from utils.config_helper import ConfigHelper
-from utils.intent_classifier import Prediction
 from utils.itf.itf import TokenDetector
 from typing import *
 import re

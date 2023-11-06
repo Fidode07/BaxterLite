@@ -1,5 +1,5 @@
 {
-  "max_token_length": 30,
+  "max_token_length": 22,
   "name": "Lukas",
   "country": "de",
   "tesseract_path": "S:\\Programms\\TesseractOCR\\tesseract.exe",
