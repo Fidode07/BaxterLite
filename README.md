@@ -21,6 +21,8 @@ Therefore, also the Lite. His features:
 - Say hello
 - Say bye
 
+You can open a chat with BaxterLite from the taskbar or by pressing the key combination ``SHIFT + B``.
+
 # 🤖 Usage 🤖
 
 - First you need to download or clone the project, then navigate to the downloaded folder:

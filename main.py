@@ -5,6 +5,7 @@ from utils.itf.itf import TokenDetector
 from utils.intent_classifier import Classifier
 from utils.ui.ui_helper import Ui, webview
 from utils.tray_helper.tray_helper import TrayHelper
+from utils.hook_helper import thread_helper
 from threading import Thread
 from tensorflow import keras
 from typing import *
@@ -51,6 +52,7 @@ def main() -> None:
     ui: Ui = Ui(title=ui_title, width=ui_width, height=ui_height, classifier=classifier, action_helper=action_helper,
                 config_helper=config_helper)
     Thread(target=TrayHelper.run_from_thread, args=(ui,)).start()
+    Thread(target=thread_helper, args=(ui,)).start()
     webview.start()
 
 
