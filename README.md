@@ -11,17 +11,21 @@ the end.
 # 📙 What it can 📙
 
 Since Baxter is only a side project and I also only add features that I can use myself, it is relatively small.
-Therefore, also the Lite. His features:
+Therefore, also the Lite. His features (actions):
 
 - Get current time
 - Clear the chat
 - Repeat the last action
+- Give you a random number
 - Tell you a joke
 - Open a website
 - Say hello
 - Say bye
 
-You can open a chat with BaxterLite from the taskbar or by pressing the key combination ``SHIFT + B``.
+BaxterLite also has a few features that are not actions, but are still very useful:
+- You can open a chat with BaxterLite from the taskbar or by pressing the key combination ``SHIFT + B``.
+- Create own, intern actions is a bit more complicated, so I programmed a small plugin system. You can find more
+  information about this in the README under ``# Create own plugins``.
 
 # 🤖 Usage 🤖
 
@@ -40,7 +44,84 @@ You can open a chat with BaxterLite from the taskbar or by pressing the key comb
   python main.py
   ```
 
+# 📚 Create own plugins 📚
+So, what is a plugin? Well, a plugin in this case is simply your Python script that you throw into the plugins folder (``plugins/``). In this case, it MUST still follow a certain structure. But don't worry, it's extremely easy to add your plugin. Let's get started.
+
+1. First we need to create our file. To do this, first go to <strong>the folder where the main.py of BaxterLite</strong> is located. From there, navigate to the `plugins` folder. If none exists yet, you can simply create one, don't worry.
+2. Good, now let's create a small Python file. In this example we will call it ``get_random_number.py``. At the end, the path of the file will look like this: ``<path-to-baxter-lite>/plugins/get_random_number.py``
+3. Everything running smoothly so far? Okay, then let's write a simple code. I'll explain it afterwards.
+    ````python
+    from utils.action_helper.action_helper import BaxterPlugin
+    from utils.action_utils import ActionUtils, TriggerInfos
+    import random
+    
+    
+    class Plugin(BaxterPlugin):
+        def __init__(self) -> None:
+            super().__init__()
+            self.name = 'get_random_number'
+    
+        @classmethod
+        def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
+                         trigger_infos: TriggerInfos) -> str:
+            try:
+                return main_str.format(number=random.randint(0, 99999))
+            except (Exception,):
+                return error_str
+    ````
+   Okay, what do we see here? First, let's create a class. The class <strong>MUST</strong> be called ``Plugin``, otherwise the manager won't find your plugin! And its base-class <strong>MUST</strong> be ``BaxterPlugin``!<br><br>Then we set the name of the plugin. Note that the <strong>default name for the plugin</strong> is ``untitled``. This will be relevant for later. However, you <strong>should change</strong> the name <strong>URGENTLY</strong>.<br><br>Now comes the most important part. The ``get_response`` function. If BaxterLite thinks that the sentence that was entered should trigger your action/plugin, then it gets the response sentence from <strong>THIS</strong> function. The function is the place where your magic happens. We'll go through the parameters of the function in a moment.
+   <br><br>
+   So, let's summarize first. First we create the class, taking into account the following:
+    - The class MUST be called ``Plugin``
+    - The class MUST inherit from ``BaxterPlugin``
+    - We should set the name of the plugin (otherwise errors may occur later)
+    
+   Well, that's what's important for creating and initializing the class. Now let's look at the ``get_response`` function. The function takes 5 parameters:
+    - <strong>input_str</strong>: str (the user input - the sentence that was entered)
+    - <strong>main_str</strong>: str (the response that the user gets when the action is executed from intents.json)
+    - <strong>error_str</strong>: str (the response that the user gets when the action went wrong - also from intents.json)
+    - <strong>action_utils</strong>: ActionUtils Class (a class that contains some useful functions, e.g. to find important parts in the user input - docs below)
+    - <strong>_</strong>: TriggerInfos Class (a class that contains some useful information about the trigger, e.g. the confidence of the classifier - docs below)
+
+    That was actually the most difficult step. And yet not too difficult, right?
+4. The manager will find the plugin on its own if you have done everything correctly. But you have not yet said exactly
+   when your plugin should be executed. For this we need to edit the ``intents.json`` file, which is under
+   ``<path-to-baxter-lite>/datasets/intents.json``. We need to navigate to the intents list and now add a new element. The element MUST have
+   the following keys:
+
+   - <strong>tag</strong>: ``String`` -> This MUST be ``plugin-<name-of-plugin>``. The name of the plugin is the name
+     that you set in the ``__init__`` function of your plugin class. In our case it is ``get_random_number``. So the
+     tag would be ``plugin-get_random_number``.
+   - <strong>patterns</strong>: ``List of strings`` -> a list of possible sentences how a user can call your action
+   - <strong>responses</strong>: ``List of strings`` -> possible responses of your action
+   - <strong>action</strong>: ``String`` -> This MUST be ``plugin-<name-of-plugin>-action``. The name of the plugin is
+     again the name that you set in the ``__init__`` function of your plugin class. In our case it is
+     ``get_random_number``. So the action would be ``plugin-get_random_number-action``.
+   - <strong>error_msg</strong>: ``String`` -> An error message that the user gets when your action went wrong
+   
+    In this example, the new element would look like this:
+    ```json
+    {
+      "tag": "plugin-get_random_number",
+      "patterns": [
+         "give me a random number",
+         "give me a number"
+      ],
+      "responses": [
+         "Here is your number: {number}"
+      ],
+      "action": "plugin-get_random_number-action",
+      "error_msg": "Unable to get random number, sorry"
+    }
+    ```
+   
+Congratulations, you have successfully created your first plugin! Now you can just launch the application and call the
+action. BaxterLite trains the classifier automatically when the application is started, so you don't have to worry about
+it!
+
 # 💥 Add an Action 💥
+<strong>NOTE: I do not recommend adding actions on this way, because it is very complicated. If it is possible, you
+should use the plugin system. You can find more information about this in the README under ``# Create own plugins``.</strong>
 
 All "commands" that Baxter can do are called action. All actions are located
 in ``utils/action_helper/actions/<name-of-action>-action.py``. To add your own action, follow the instructions below:
