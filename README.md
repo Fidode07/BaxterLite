@@ -81,7 +81,7 @@ So, what is a plugin? Well, a plugin in this case is simply your Python script t
     - <strong>main_str</strong>: str (the response that the user gets when the action is executed from intents.json)
     - <strong>error_str</strong>: str (the response that the user gets when the action went wrong - also from intents.json)
     - <strong>action_utils</strong>: ActionUtils Class (a class that contains some useful functions, e.g. to find important parts in the user input - docs below)
-    - <strong>_</strong>: TriggerInfos Class (a class that contains some useful information about the trigger, e.g. the confidence of the classifier - docs below)
+    - <strong>trigger_infos</strong>: TriggerInfos Class (a class that contains some useful information about the trigger, e.g. the confidence of the classifier - docs below)
 
     That was actually the most difficult step. And yet not too difficult, right?
 4. The manager will find the plugin on its own if you have done everything correctly. But you have not yet said exactly
