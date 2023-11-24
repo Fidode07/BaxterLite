@@ -56,7 +56,7 @@ def main() -> None:
                 config_helper=config_helper)
     Thread(target=TrayHelper.run_from_thread, args=(ui,)).start()
     Thread(target=thread_helper, args=(ui,)).start()
-    webview.start()
+    webview.start(debug=False)
 
 
 if __name__ == '__main__':

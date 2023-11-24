@@ -6,10 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/chat.css">
     <script src="js/ChatHelper.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script>
+        function set_plugin_counter(val) {
+            const plugin_counter = document.querySelector('#plugins-counter');
+            plugin_counter.innerHTML = val;
+        }
+    </script>
 </head>
 <body>
+<script>
+    function toggleDotMenu() {
+        let dotMenu = document.getElementById("dot-menu");
+        dotMenu.classList.toggle("show");
+    }
+</script>
 <div class="chat" id="message-container">
     <div class="header">
+        <span class="dot-menu-btn" onclick="toggleDotMenu()">
+            <i class="fa-solid fa-ellipsis-v"></i>
+        </span>
+
+        <div class="dot-menu" id="dot-menu">
+            <button class="setting-btn">
+                Plug-Ins(<span id="plugins-counter"></span>) <i class="fa-solid fa-plug"></i>
+            </button>
+            <button class="setting-btn" onclick="pywebview.api.close_current_ui()">
+                Exit <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+        </div>
+
         <h1 class="title">BaxterLite - Chat</h1>
     </div>
 

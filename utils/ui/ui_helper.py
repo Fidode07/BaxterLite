@@ -37,6 +37,10 @@ class Ui:
         self.__last_action: Union[str, None] = None
         self.__last_input: Union[str, None] = None
 
+    def close_current_ui(self) -> None:
+        if self.__window:
+            self.__window.destroy()
+
     def open_ui(self) -> None:
         # if the ui is already open
         if self.__currently_ui_open:
@@ -48,6 +52,7 @@ class Ui:
         ui: webview.Window = webview.create_window(self.__title, 'src/chat.html', width=self.__width,
                                                    height=self.__height, resizable=False, on_top=True, js_api=self,
                                                    x=x, y=y)
+        ui.evaluate_js(f'set_plugin_counter(\'{len(self.__action_helper.get_plugin_manager().get_plugin_actions())}\')')
         ui.events.shown += self.__on_window_shown
         ui.events.closing += self.__on_window_closed
         self.__window = ui
@@ -111,3 +116,5 @@ class Ui:
     def __on_window_shown(self) -> None:
         self.__currently_ui_open = True
         self.__move_window_to_bottom_right(self.__window)
+        self.__window.evaluate_js(
+            f'set_plugin_counter(\'{len(self.__action_helper.get_plugin_manager().get_plugin_actions())}\')')

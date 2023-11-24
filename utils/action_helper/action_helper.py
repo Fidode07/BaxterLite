@@ -48,6 +48,13 @@ class ActionHelper:
         self.__actions.update(self.__plugin_manager.get_plugin_actions())
         self.__plugins: List[BaxterPlugin] = []
 
+    def get_plugin_manager(self) -> PluginManager:
+        """
+        Returns the Plugin Manager which is used to load plugins
+        :return: PluginManager instance
+        """
+        return self.__plugin_manager
+
     def action_exists(self, action_key: str) -> bool:
         """
         :param action_key: string - action key also known as action name

@@ -24,6 +24,68 @@ body {
 body .header {
   text-align: center;
 }
+body .header .dot-menu-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background: #026fc4;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+body .header .dot-menu-btn:hover {
+  background: #015292;
+}
+body .header .dot-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 200px;
+  background: rgba(1, 54, 95, 0.1);
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1.75px);
+  padding: 20px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  display: none;
+}
+body .header .dot-menu.show {
+  display: block;
+  animation: slide-in 0.2s ease-in-out;
+  margin-left: 0;
+}
+body .header .dot-menu .setting-btn {
+  padding: 10px 20px;
+  background: #026fc4;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+body .header .dot-menu .setting-btn:hover {
+  background: #015292;
+}
+body .header .dot-menu .setting-btn + .setting-btn {
+  margin-top: 15px;
+}
 body .header .title {
   font-size: 2.2rem;
   width: 90%;

@@ -29,6 +29,75 @@ body {
   .header {
     text-align: center;
 
+    .dot-menu-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 10px 20px;
+      background: $ai-box-background;
+      border: none;
+      border-radius: $box-radius;
+      box-shadow: $box-shadow;
+      color: $ai-box-color;
+      font-size: 1.2rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background: darken($ai-box-background, 10%);
+      }
+    }
+
+    .dot-menu {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      box-shadow: $box-shadow;
+      width: 200px;
+      background: darken(transparentize($ai-box-background, .9), 20%);
+      border-radius: $box-radius;
+      border: 1px solid rgba(0, 0, 0, .3);
+      backdrop-filter: blur(1.75px);
+      padding: 20px;
+      color: $ai-box-color;
+      font-size: 1.2rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+      display: none;
+
+      &.show {
+        display: block;
+        animation: slide-in 0.2s ease-in-out;
+        margin-left: 0;
+      }
+
+      .setting-btn {
+        padding: 10px 20px;
+        background: $ai-box-background;
+        border: none;
+        border-radius: $box-radius;
+        box-shadow: $box-shadow;
+        color: $ai-box-color;
+        font-size: 1.2rem;
+        font-weight: 700;
+        outline: none;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+
+        &:hover {
+          background: darken($ai-box-background, 10%);
+        }
+
+        & + .setting-btn {
+          margin-top: 15px;
+        }
+      }
+    }
+
     .title {
       font-size: 2.2rem;
       width: 90%;
@@ -52,7 +121,6 @@ body {
       width: 0;
       background: transparent;
     }
-
 
     .message {
       box-shadow: $box-shadow;
