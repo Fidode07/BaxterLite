@@ -16,7 +16,7 @@ keras.mixed_precision.set_global_policy('mixed_float16')
 def init_model(model_class: Union[Classifier, TokenDetector], epochs: int) -> None:
     if model_class.is_usable():
         if isinstance(model_class, Classifier):
-            model_class.train(epochs=10)  # make sure that the model is trained on the new dataset
+            model_class.train(epochs=20)  # make sure that the model is trained on the new dataset
         return
     model_class.train(epochs=epochs)
     # TODO: Make instance check and load pretrained model if available
