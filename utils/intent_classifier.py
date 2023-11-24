@@ -49,6 +49,28 @@ class Classifier:
             tag: str = intent['tag']
             self.__tags[idx] = tag
 
+    def tag_exists(self, tag: str) -> bool:
+        """
+        Checks if a tag exists
+        :param tag: string - tag to check
+        :return: bool - True if tag exists, False if not
+        """
+        for intent in self.__dataset['intents']:
+            if intent['tag'] == tag:
+                return True
+        return False
+
+    def action_exists(self, action: str) -> bool:
+        """
+        Checks if an action exists
+        :param action: string - action to check
+        :return: bool - True if action exists, False if not
+        """
+        for intent in self.__dataset['intents']:
+            if intent['action'] == action:
+                return True
+        return False
+
     def get_intent_by_action(self, action: str) -> Union[Intent, None]:
         for intent in self.__dataset['intents']:
             if intent['action'] == action:

@@ -52,7 +52,6 @@ class KeyboardListener:
         if event.key_code == int(self.__shortcut_key):
             # Cancel event
             self.__hook_handler.handle(event)
-            return 1
         for h in self.handlers:
             h(event)
         return ctypes.windll.user32.CallNextHookEx(self.hook_id, n_code, w_param, l_param)

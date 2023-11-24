@@ -15,6 +15,8 @@ keras.mixed_precision.set_global_policy('mixed_float16')
 
 def init_model(model_class: Union[Classifier, TokenDetector], epochs: int) -> None:
     if model_class.is_usable():
+        if isinstance(model_class, Classifier):
+            model_class.train(epochs=10)  # make sure that the model is trained on the new dataset
         return
     model_class.train(epochs=epochs)
     # TODO: Make instance check and load pretrained model if available
@@ -23,6 +25,7 @@ def init_model(model_class: Union[Classifier, TokenDetector], epochs: int) -> No
 def main() -> None:
     model_helper: Word2VecModels = Word2VecModels()
     target_model: Model = model_helper.get_model_by_idx(5)
+    # target_model: Model = model_helper.get_model_by_idx(0)
     config_helper: ConfigHelper = ConfigHelper(config_path='config.json')
 
     str_helper: StringHelper = StringHelper(target_model)
@@ -30,6 +33,7 @@ def main() -> None:
                                                   intent_paths=['datasets/itf/output-dataset.json',
                                                                 # 'datasets/itf/domain_dataset.json'],
                                                                 ],
+
                                                   use_pretrained=True)
     # TODO: Add downloader for domain_dataset.json
     init_model(token_detector,
@@ -39,7 +43,6 @@ def main() -> None:
 
     classifier: Classifier = Classifier(config_helper, str_helper, 'datasets/intents.json', use_pretrained=True)
     init_model(classifier, 200)
-    classifier.train(epochs=200)
 
     action_helper: ActionHelper = ActionHelper(config_helper=config_helper,
                                                token_detector=token_detector,

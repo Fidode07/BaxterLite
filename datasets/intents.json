@@ -5,6 +5,27 @@
   },
   "intents": [
     {
+      "tag": "plugin-get_random_number",
+      "patterns": [
+        "gib mir eine zufällige zahl",
+        "ich hätte gerne eine zufällige zahl",
+        "kannst du mir ne random zahl geben",
+        "ich hätte gerne ne random zahl",
+        "ich hätte gerne eine random zahl",
+        "ich hätte gerne eine zufallszahl",
+        "gib mir eine random zahl",
+        "gib mir eine zufallszahl",
+        "gib mal ne random zahl"
+      ],
+      "responses": [
+        "Hier ist deine zufällige Zahl: {number}",
+        "Deine zufällige Zahl ist: {number}",
+        "Ich habe dir eine zufällige Zahl gegeben: {number}"
+      ],
+      "action": "plugin-get_random_number-action",
+      "error_msg": null
+    },
+    {
       "tag": "greeting",
       "patterns": [
         "hi",

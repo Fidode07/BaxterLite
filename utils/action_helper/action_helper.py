@@ -7,6 +7,25 @@ from utils.itf.itf import TokenDetector
 from typing import *
 import logging
 
+from utils.plugin_manager import PluginManager
+
+
+class BaxterPlugin:
+    def __init__(self) -> None:
+        self.name: str = 'untitled'
+        self.version: float = 1.0
+
+    @classmethod
+    def get_response(cls, _input_str: str, _main_str: str, _error_str: str, _action_utils: ActionUtils,
+                     _: TriggerInfos) -> str:
+        return 'Default Response!'
+
+    def get_name(self) -> str:
+        return self.name
+
+    def get_version(self) -> float:
+        return self.version
+
 
 class ActionHelper:
     def __init__(self, config_helper: ConfigHelper, token_detector: TokenDetector, classifier: Classifier) -> None:
@@ -15,6 +34,7 @@ class ActionHelper:
                                                        token_detector=token_detector,
                                                        action_helper=self,
                                                        classifier=classifier)
+        self.__plugin_manager: PluginManager = PluginManager(classifier)
 
         self.__actions: dict = {
             'get_current_time': current_time_action.CurrentTimeAction(),
@@ -25,6 +45,8 @@ class ActionHelper:
             'repeat': repeat_action.RepeatAction(),
             'open_website': open_website_action.OpenWebsiteAction(),
         }
+        self.__actions.update(self.__plugin_manager.get_plugin_actions())
+        self.__plugins: List[BaxterPlugin] = []
 
     def action_exists(self, action_key: str) -> bool:
         """
