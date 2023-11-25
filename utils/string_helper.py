@@ -4,7 +4,7 @@ import nltk
 from nltk import word_tokenize
 from dataclasses import dataclass
 
-nltk.download('punkt')
+nltk.download('punkt', quiet=True)
 
 
 @dataclass

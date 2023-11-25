@@ -1,3 +1,4 @@
+import time
 from utils.action_helper.action_helper import ActionHelper
 from utils.config_helper import ConfigHelper
 from utils.string_helper import StringHelper, Model, Word2VecModels
@@ -22,7 +23,22 @@ def init_model(model_class: Union[Classifier, TokenDetector], epochs: int) -> No
     # TODO: Make instance check and load pretrained model if available
 
 
+def show_startup_message() -> None:
+    msg_width: int = 75
+    program_name: str = 'BaxterLite'
+    author: str = 'by Fido_de07'
+    print('-' * msg_width)
+    print(f'{program_name:^{msg_width}}')
+    print(f'{author:^{msg_width}}')
+    # print('\nNOTE: This program can take a while to start up, so please be patient.')
+    print(f'{"NOTE: This program can take a while to start up, so please be patient.":^{msg_width}}')
+    print('-' * msg_width)
+
+
 def main() -> None:
+    show_startup_message()
+    start: float = time.time()
+
     model_helper: Word2VecModels = Word2VecModels()
     target_model: Model = model_helper.get_model_by_idx(5)
     # target_model: Model = model_helper.get_model_by_idx(0)
@@ -56,6 +72,9 @@ def main() -> None:
                 config_helper=config_helper)
     Thread(target=TrayHelper.run_from_thread, args=(ui, config_helper)).start()
     Thread(target=thread_helper, args=(ui,)).start()
+
+    print(f'Startup in {time.time() - start} seconds')
+
     webview.start(debug=False)
 
 
