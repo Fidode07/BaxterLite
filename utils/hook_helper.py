@@ -32,7 +32,7 @@ class HookEventHandler:
     def __is_shortcut(self, event: KeyEvents) -> bool:
         return event.key_code == int(self.__shortcut_key)
 
-    def handle(self, event: KeyEvents) -> None:
+    def handle(self, event: KeyEvents) -> int:
         if self.__is_shift(event):
             self.__is_shift_pressed = event.event_type == 'key down'
         elif self.__is_ctrl(event):
@@ -40,7 +40,14 @@ class HookEventHandler:
         elif all([self.__is_shortcut(event), self.__is_shift_pressed, self.__is_ctrl_pressed,
                   event.event_type == 'key down']):
             # Shortcut pressed
-            self.__ui.open_ui()
+            try:
+                self.__ui.open_ui()
+                return 1
+            except (Exception,):
+                message_box = ctypes.windll.user32.MessageBoxW
+                message_box(None, 'An error occurred while opening the UI. Please try again!', 'Error', 0)
+                return 0
+        return 0
 
 
 class KeyboardListener:
@@ -60,9 +67,7 @@ class KeyboardListener:
         event_types = {0x100: 'key down', 0x101: 'key up', 0x104: 'key down', 0x105: 'key up'}
         event = KeyEvents(event_types[w_param], l_param[0], l_param[1], l_param[2] == 32, l_param[3])
         if event.key_code == int(self.__shortcut_key):
-            self.__hook_handler.handle(event)
-            # Cancel event
-            return 1
+            return self.__hook_handler.handle(event)
         for h in self.handlers:
             h(event)
         return ctypes.windll.user32.CallNextHookEx(self.hook_id, n_code, w_param, l_param)

@@ -21,9 +21,10 @@ class Ui:
         self.__height: int = height
         self.__title: str = title
 
-        x, y = self.__calculate_window_position()
+        self.__x, self.__y = self.__calculate_window_position()
         self.__window: webview.Window = webview.create_window(title, 'src/chat.html', width=width, height=height,
-                                                              resizable=False, on_top=True, js_api=self, x=x, y=y)
+                                                              resizable=False, on_top=True, js_api=self, x=self.__x,
+                                                              y=self.__y)
 
         self.__classifier: Classifier = classifier
         self.__action_helper: ActionHelper = action_helper
@@ -40,22 +41,21 @@ class Ui:
     def close_current_ui(self) -> None:
         if self.__window:
             self.__window.destroy()
+        self.__window = None
 
     def open_ui(self) -> None:
         # if the ui is already open
-        if self.__currently_ui_open:
+        if self.__currently_ui_open or self.__window:
             # make sure window is at correct position
             self.__on_window_shown()
             return
-        # if the ui is not open
-        x, y = self.__calculate_window_position()
-        ui: webview.Window = webview.create_window(self.__title, 'src/chat.html', width=self.__width,
-                                                   height=self.__height, resizable=False, on_top=True, js_api=self,
-                                                   x=x, y=y)
-        ui.evaluate_js(f'set_plugin_counter(\'{len(self.__action_helper.get_plugin_manager().get_plugin_actions())}\')')
-        ui.events.shown += self.__on_window_shown
-        ui.events.closing += self.__on_window_closed
-        self.__window = ui
+        if not self.__window and len(webview.windows) == 0:
+            # create new window
+            self.__window = webview.create_window(self.__title, 'src/chat.html', width=self.__width,
+                                                  height=self.__height,
+                                                  resizable=False, on_top=True, js_api=self, x=self.__x, y=self.__y)
+            self.__window.events.shown += self.__on_window_shown
+            self.__window.events.closing += self.__on_window_closed
 
     def __on_window_closed(self) -> None:
         self.__currently_ui_open = False
@@ -82,6 +82,8 @@ class Ui:
             if error_str:
                 return {'response': error_str}
             return {'response': 'Sorry, I did not understand that. Maybe your input was too long.'}
+        if len(webview.windows) > 0:
+            self.__window = webview.windows[0]
         result: str = self.__action_helper.try_action(message,
                                                       classified.action,
                                                       classified.main_str,
@@ -114,6 +116,9 @@ class Ui:
         window.move(x, y)
 
     def __on_window_shown(self) -> None:
+        if not self.__window:
+            return
+
         self.__currently_ui_open = True
         self.__move_window_to_bottom_right(self.__window)
         self.__window.evaluate_js(

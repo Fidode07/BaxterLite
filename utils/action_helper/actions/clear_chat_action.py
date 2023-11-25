@@ -1,3 +1,4 @@
+import logging
 from utils.action_utils import ActionUtils, TriggerInfos
 
 
@@ -8,5 +9,6 @@ class ClearChatAction:
         try:
             trigger_infos.ui.evaluate_js('clear_chat()')
             return main_str
-        except (Exception,):
+        except (Exception,) as e:
+            logging.error(['[ClearChatAction -> get_response]', e])
             return error_str
