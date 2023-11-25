@@ -4,7 +4,7 @@ from utils.intent_classifier import Intent
 
 class RepeatAction:
     @classmethod
-    def get_response(cls, inp_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
+    def get_response(cls, _inp_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
                      trigger_infos: TriggerInfos) -> str:
         try:
             blacklisted_actions: list = [None, 'repeat', 'stopword-detected']

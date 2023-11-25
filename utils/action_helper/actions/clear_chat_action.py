@@ -1,5 +1,4 @@
 from utils.action_utils import ActionUtils, TriggerInfos
-import webview
 
 
 class ClearChatAction:

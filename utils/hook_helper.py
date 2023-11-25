@@ -12,8 +12,12 @@ class KeyEvents(namedtuple("KeyEvents", ['event_type', 'key_code', 'scan_code', 
 class HookEventHandler:
     def __init__(self, ui: Ui) -> None:
         self.__is_shift_pressed: bool = False
+        self.__is_ctrl_pressed: bool = False
+
         self.__shortcut_key: str = '206158430274'
         self.__shift_key: str = '180388626592'
+        self.__ctrl_key: str = '124554051746'
+
         self.__ui = ui
 
     def get_shortcut_key(self) -> str:
@@ -22,13 +26,19 @@ class HookEventHandler:
     def __is_shift(self, event: KeyEvents) -> bool:
         return event.key_code == int(self.__shift_key)
 
+    def __is_ctrl(self, event: KeyEvents) -> bool:
+        return event.key_code == int(self.__ctrl_key)
+
     def __is_shortcut(self, event: KeyEvents) -> bool:
         return event.key_code == int(self.__shortcut_key)
 
     def handle(self, event: KeyEvents) -> None:
         if self.__is_shift(event):
             self.__is_shift_pressed = event.event_type == 'key down'
-        elif all([self.__is_shortcut(event), self.__is_shift_pressed, event.event_type == 'key down']):
+        elif self.__is_ctrl(event):
+            self.__is_ctrl_pressed = event.event_type == 'key down'
+        elif all([self.__is_shortcut(event), self.__is_shift_pressed, self.__is_ctrl_pressed,
+                  event.event_type == 'key down']):
             # Shortcut pressed
             self.__ui.open_ui()
 
@@ -50,8 +60,9 @@ class KeyboardListener:
         event_types = {0x100: 'key down', 0x101: 'key up', 0x104: 'key down', 0x105: 'key up'}
         event = KeyEvents(event_types[w_param], l_param[0], l_param[1], l_param[2] == 32, l_param[3])
         if event.key_code == int(self.__shortcut_key):
-            # Cancel event
             self.__hook_handler.handle(event)
+            # Cancel event
+            return 1
         for h in self.handlers:
             h(event)
         return ctypes.windll.user32.CallNextHookEx(self.hook_id, n_code, w_param, l_param)

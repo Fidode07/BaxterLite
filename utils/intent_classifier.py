@@ -137,7 +137,8 @@ class Classifier:
                 keras.layers.Dropout(0.2),
                 keras.layers.Dense(len(self.__tags.keys()), activation='softmax')
             ])
-            self.__intent_detector.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+            self.__intent_detector.compile(optimizer='adam', loss='sparse_categorical_crossentropy',
+                                           metrics=['accuracy'])
         self.__intent_detector.fit(features, labels, epochs=epochs, batch_size=batch_size)
         os.makedirs('models/pretrained', exist_ok=True)
         self.__intent_detector.save(self.__model_file)
