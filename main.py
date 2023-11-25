@@ -54,7 +54,7 @@ def main() -> None:
 
     ui: Ui = Ui(title=ui_title, width=ui_width, height=ui_height, classifier=classifier, action_helper=action_helper,
                 config_helper=config_helper)
-    Thread(target=TrayHelper.run_from_thread, args=(ui,)).start()
+    Thread(target=TrayHelper.run_from_thread, args=(ui, config_helper)).start()
     Thread(target=thread_helper, args=(ui,)).start()
     webview.start(debug=False)
 

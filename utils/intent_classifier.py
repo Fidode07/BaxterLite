@@ -128,15 +128,16 @@ class Classifier:
         features: np.ndarray = np.array(features)
         labels: np.ndarray = np.array(labels)
 
-        self.__intent_detector = keras.Sequential = keras.Sequential([
-            keras.layers.LSTM(128 * 2, input_shape=(self.__max_token_lengths, self.__str_helper.get_dimensions()),
-                              return_sequences=True),
-            keras.layers.Dropout(0.2),
-            keras.layers.LSTM(128 * 2),
-            keras.layers.Dropout(0.2),
-            keras.layers.Dense(len(self.__tags.keys()), activation='softmax')
-        ])
-        self.__intent_detector.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        if not self.__intent_detector:
+            self.__intent_detector = keras.Sequential = keras.Sequential([
+                keras.layers.LSTM(128 * 2, input_shape=(self.__max_token_lengths, self.__str_helper.get_dimensions()),
+                                  return_sequences=True),
+                keras.layers.Dropout(0.2),
+                keras.layers.LSTM(128 * 2),
+                keras.layers.Dropout(0.2),
+                keras.layers.Dense(len(self.__tags.keys()), activation='softmax')
+            ])
+            self.__intent_detector.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
         self.__intent_detector.fit(features, labels, epochs=epochs, batch_size=batch_size)
         os.makedirs('models/pretrained', exist_ok=True)
         self.__intent_detector.save(self.__model_file)

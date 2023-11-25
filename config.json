@@ -2,8 +2,8 @@
   "max_token_length": 22,
   "name": "Lukas",
   "country": "de",
-  "tesseract_path": "S:\\Programms\\TesseractOCR\\tesseract.exe",
   "ui_title": "BaxterLite",
+  "tray_icon_name": "BaxterLite",
   "ui_width": 450,
   "ui_height": 700,
   "classifier_error_str": "Tur mir leid, ich habe dich nicht verstanden. Vielleicht war deine Nachricht zu lang?"
