@@ -43,14 +43,20 @@ class Word2VecModels:
         :param name: string - name of the target model
         :return: StringHelper.Model - returns model with the target name
         """
-        return self.__models[name]
+        for model in self.__models:
+            if model.name == name:
+                return model
+        raise Exception(f'No model with the name {name} found')
 
     def get_model_by_size(self, size: int) -> Model:
         """
         :param size: int - size of the target model
         :return: StringHelper.Model - returns target model
         """
-        return self.__models[size]
+        for model in self.__models:
+            if model.size == size:
+                return model
+        raise Exception(f'No model with the size {size} found')
 
     def get_smallest_model(self) -> Model:
         """

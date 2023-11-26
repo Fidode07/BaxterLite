@@ -25,15 +25,6 @@ class PositionPrediction:
     part3_start: float
     part3_end: float
 
-    part4_start: float
-    part4_end: float
-
-    part5_start: float
-    part5_end: float
-
-    part6_start: float
-    part6_end: float
-
 
 class TokenDetector:
     def __init__(self, config_helper: ConfigHelper, str_helper: StringHelper, intent_paths: List[str],
@@ -60,8 +51,8 @@ class TokenDetector:
         if not self.__max_token_length or not isinstance(self.__max_token_length, int):
             raise Exception('max_token_length is not set in config.json or is not an integer.')
         self.__intent_paths: List[str] = intent_paths
-        self.__dataset_url: str = ('https://cdn.discordapp.com/attachments/1057089742262509659/1160679686058291320'
-                                   '/output-dataset.json')
+        self.__dataset_url: str = ('https://cdn.discordapp.com/attachments/1057089742262509659/1178343410151727174'
+                                   '/webintents.json')
 
     def is_usable(self) -> bool:
         return self.__token_detector is not None
@@ -73,12 +64,12 @@ class TokenDetector:
         """
         import requests
         import os
-        if os.path.isfile('datasets/itf/output-dataset.json'):
+        if os.path.isfile('datasets/itf/webintents.json'):
             logging.info('Dataset already downloaded.')
             return
         logging.info('Downloading dataset ...')
         os.makedirs('datasets/itf', exist_ok=True)
-        with open('datasets/itf/output-dataset.json', 'wb') as f:
+        with open('datasets/itf/webintents.json', 'wb') as f:
             f.write(requests.get(self.__dataset_url).content)
         logging.info('Downloaded dataset.')
 
@@ -93,10 +84,7 @@ class TokenDetector:
             self.__str_helper.get_insertable(s.lower(), self.__max_token_length, True))
         return PositionPrediction(float(prediction[0][0]), float(prediction[0][1]),
                                   float(prediction[0][2]), float(prediction[0][3]),
-                                  float(prediction[0][4]), float(prediction[0][5]),
-                                  float(prediction[0][6]), float(prediction[0][7]),
-                                  float(prediction[0][8]), float(prediction[0][9]),
-                                  float(prediction[0][10]), float(prediction[0][11]))
+                                  float(prediction[0][4]), float(prediction[0][5]))
 
     @staticmethod
     def __get_part_info(labels: tuple, index: int) -> list:
@@ -122,10 +110,10 @@ class TokenDetector:
         features: list = []
         labels: list = []
 
-        if not os.path.exists('datasets/itf/output-dataset.json'):
+        if not os.path.exists('datasets/itf/webintents.json') or len(self.__intent_paths) == 0:
             self.download_dataset()
-            if 'datasets/itf/output-dataset.json' not in self.__intent_paths:
-                self.__intent_paths.append('datasets/itf/output-dataset.json')
+            if 'datasets/itf/webintents.json' not in self.__intent_paths:
+                self.__intent_paths.append('datasets/itf/webintents.json')
 
         # Load all datasets and append them to the features and labels list
         for intent_path in self.__intent_paths:
@@ -135,7 +123,12 @@ class TokenDetector:
                 sentence: str = str(entry['pattern']).lower()
                 if self.__str_helper.get_token_length(sentence) > self.__max_token_length:
                     continue
-                label: tuple = entry['labels']
+                try:
+                    label: tuple = entry['labels']
+                except KeyError as e:
+                    if 'label' not in entry:
+                        raise e
+                    label: tuple = entry['label']  # and if there is also no label key, it also raises the error
                 # labels.append(np.array([label[0][1], label[0][2],
                 #                         label[1][1], label[1][2],
                 #                         label[2][1], label[2][2]]))
@@ -144,8 +137,9 @@ class TokenDetector:
                 # ive checked the dataset and there are max 6 lists in the labels list. If there are less than 6 lists
                 # we put -1 values in here
                 to_extend: list = []
-                for i in range(6):
+                for i in range(3):
                     to_extend.extend(self.__get_part_info(label, i))
+                print(to_extend)
                 labels.append(np.array(to_extend))
                 features.append(
                     self.__str_helper.get_insertable(sentence, self.__max_token_length).astype(np.float32))
@@ -156,8 +150,6 @@ class TokenDetector:
 
         features: np.ndarray = np.array(features)
         labels: np.ndarray = np.array(labels)
-
-        print(len(features))
 
         # Shuffle the features and labels
         c: list = list(zip(features, labels))
@@ -180,18 +172,16 @@ class TokenDetector:
 
         # Create the model
         self.__token_detector: keras.Sequential = keras.Sequential([
-            keras.layers.LSTM(128, return_sequences=True,
-                              input_shape=(self.__max_token_length, self.__str_helper.get_dimensions())),
-            keras.layers.Dropout(0.2),
-            keras.layers.LSTM(128, return_sequences=True),
+            keras.layers.LSTM(128, input_shape=(self.__max_token_length, self.__str_helper.get_dimensions()),
+                              return_sequences=True),
             keras.layers.Dropout(0.2),
             keras.layers.LSTM(128),
             keras.layers.Dropout(0.2),
-            keras.layers.Dense(64, activation='relu'),
-            keras.layers.Dense(12)  # 12 Ausgänge für die Positionen im Text
+            keras.layers.Dense(128, activation='relu'),
+            keras.layers.Dense(6)
         ])
 
         self.__token_detector.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mean_squared_error',
-                                      metrics=['accuracy'])
+                                      metrics=['mse'])
         self.__token_detector.fit(features, labels, epochs=epochs, batch_size=batch_size, validation_split=.2)
         self.__token_detector.save(f'models/pretrained/token_detector-{self.__str_helper.get_model_name()}.h5')
