@@ -51,9 +51,10 @@ So, what is a plugin? Well, a plugin in this case is simply your Python script t
 folder (``plugins/``). In this case, it MUST still follow a certain structure. But don't worry, it's extremely easy to
 add your plugin. Let's get started.
 
-1. First we need to create our file. To do this, first go to <strong>the folder where the main.py of BaxterLite</strong>
+1. First we need to create our Python file. To do this, first go to <strong>the folder where the main.py of BaxterLite</strong>
    is located. From there, navigate to the `plugins` folder. If none exists yet, you can simply create one, don't worry.
-2. Good, now let's create a small Python file. In this example we will call it ``get_random_number.py``. At the end, the
+
+   Now we create the file. In this example we will call it ``get_random_number.py``. You should move it into the ``plugins`` directory, so at the end, the
    path of the file will look like this: ``<path-to-baxter-lite>/plugins/get_random_number.py``
 3. Everything running smoothly so far? Okay, then let's write a simple code. I'll explain it afterwards.
     ````python
