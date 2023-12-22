@@ -100,6 +100,18 @@ add your plugin. Let's get started.
     - <strong>trigger_infos</strong>: TriggerInfos Class (a class that contains some useful information about the
       trigger, e.g. the confidence of the classifier - docs below)
 
+    <br><br><strong>NOTE: </strong>If you need it, your ```get_response``` function <strong>CAN</strong> also be asynchronous. Just add the
+    ```async``` keyword before the ```def``` keyword. The function should then look like this:
+    ```python
+    @classmethod
+    async def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
+                         trigger_infos: TriggerInfos) -> str:
+        try:
+            return main_str.format(number=random.randint(0, 99999))
+        except (Exception,):
+            return error_str
+    ```
+
    That was actually the most difficult step. And yet not too difficult, right?
 4. The manager will find the plugin on its own if you have done everything correctly. But you have not yet said exactly
    when your plugin should be executed. For this we need to edit the ``intents.json`` file, which is under
@@ -159,7 +171,7 @@ in ``utils/action_helper/actions/<name-of-action>-action.py``. To add your own a
       def get_response(self, input_str, main_response: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
           return main_response
   ```
-  <strong>Note that ALL actions must have the function ``get_response``!</strong>
+  <strong>Note that ALL actions must have the function ``get_response``! And also note that you <strong>CAN</strong> make this function asynchronous like described in the plugin section.</strong>
 
 
 - As you can see, the function must take 5 parameters:
@@ -249,7 +261,35 @@ The TriggerInfos class is a class that contains some useful information about th
 The ActionUtils class is a class that contains some useful functions. You can find it under ``utils/action_utils.py``.
 The class contains the following functions:
 
-- get_important_parts(string) -> PositionPrediction
+
+### request_input(string, function) -> None
+  
+  This functions sends the given string to the current chat and calls the given function when the user sends the next
+  message. Need some example? Here you go:
+
+  ```py
+  class GetRandomNumberAction:
+    @classmethod
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
+      def callback(input_str: str):
+        print(input_str) # -> should be the user input (for e.g. if next message is "123" it should print "123")
+        action_utils.request_input('Please enter a number', callback) # -> displays "Please enter a number" in the chat and calls the callback function when the user sends the next message
+  ```
+
+### request_input_async(string) -> string
+  I personally recommend using this function instead of the synchronous one, because its much easier to use. This
+  function sends the given string to the current chat and returns the next message of the user. Here is an example:
+
+  ```py
+  class GetRandomNumberAction:
+    @classmethod
+    async def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
+      user_input: str = await action_utils.request_input_async('Please enter a number') # -> displays "Please enter a number" in the chat and returns the next message of the user
+      print('User input: ' + user_input) # -> should be the user input (for e.g. if next message is "123" it should print "123")
+  ```
+  <strong>Note that the function must be asynchronous like described in the plugin section.</strong>
+
+### get_important_parts(string) -> PositionPrediction
 
   Returns PositionPrediction Class (contains for each important part start-idx and end-idx, if nothing found it will be
   minus value)
@@ -278,7 +318,7 @@ The class contains the following functions:
     def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
         config_helper: ConfigHelper = action_utils.get_config_helper()
   ```
-- get_part_by_indexes(string, int, int) -> str
+### get_part_by_indexes(string, int, int) -> str
 
   Returns the location in a string that is between the given indexes.
   Example:
@@ -293,7 +333,7 @@ The class contains the following functions:
 
         result: str = action_utils.get_part_by_indexes(test_str, start_idx, end_idx) # should be "example sentence"
   ```
-- handle_if_statements(string) -> str
+### handle_if_statements(string) -> str
 
   Executes an if statement in the string, checking the config for values. Returns the executed string. The sample config
   looks like this:
@@ -325,7 +365,7 @@ The class contains the following functions:
       result: str = action_utils.handle_if_statements(main_str) # since name exists in Config it will result in "Hello, Fido!" otherwhise it would end in "Hello!"
       return result
   ```
-- get_token_detector() -> TokenDetector
+### get_token_detector() -> TokenDetector
   Returns an instance of the TokenDetector class
   Example:
 
