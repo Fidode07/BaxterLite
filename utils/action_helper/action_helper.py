@@ -6,6 +6,7 @@ from utils.intent_classifier import Classifier
 from utils.itf.itf import TokenDetector
 from typing import *
 import logging
+import asyncio
 
 from utils.plugin_manager import PluginManager
 
@@ -48,6 +49,13 @@ class ActionHelper:
         self.__actions.update(self.__plugin_manager.get_plugin_actions())
         self.__plugins: List[BaxterPlugin] = []
 
+        from utils.ui.ui_helper import Ui  # import locally to avoid circular imports but still have type hints
+        self.__ui: Union[Ui, None] = None
+
+    def set_ui(self, ui) -> None:
+        self.__action_utils.set_ui(ui)
+        self.__ui = ui
+
     def get_plugin_manager(self) -> PluginManager:
         """
         Returns the Plugin Manager which is used to load plugins
@@ -82,8 +90,15 @@ class ActionHelper:
         # return action(input_str, main_str, error_str, self.__action_utils)
         # every class linked in self.__actions MUST have a get_response method
         try:
-            return action.get_response(input_str, main_str, error_str, self.__action_utils,  # type: ignore
-                                       trigger_infos)
+            # return action.get_response(input_str, main_str, error_str, self.__action_utils,  # type: ignore
+            #                            trigger_infos)
+            # check if the get_response function is a coroutine (async function)
+            if asyncio.iscoroutinefunction(action.get_response):
+                return asyncio.run(action.get_response(input_str, main_str, error_str, self.__action_utils,
+                                                       trigger_infos))
+            else:
+                return action.get_response(input_str, main_str, error_str, self.__action_utils,
+                                           trigger_infos)
         except AttributeError:
             raise Exception(f'Action {action_key} has no get_response method')
         except Exception as e:

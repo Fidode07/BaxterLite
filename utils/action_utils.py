@@ -22,6 +22,29 @@ class ActionUtils:
         self.__action_helper = action_helper
         self.__classifier = classifier
 
+        from utils.ui.ui_helper import Ui  # import locally to avoid circular imports but still have type hints
+        self.__ui: Union[Ui, None] = None
+
+    def set_ui(self, ui) -> None:
+        self.__ui = ui
+
+    def request_input(self, prompt: str, callback: Callable[[str], None]) -> None:
+        """
+        Use this method if you want to request some input from the user.
+        :param prompt: str -> prompt to send to the ui (message to display)
+        :param callback: Callable[[str], None] -> callback to call when the user sends a message
+        :return: None
+        """
+        self.__ui.request_next_message(prompt, callback)
+
+    async def request_input_async(self, prompt: str) -> str:
+        """
+        Use this method if you want to request some input from the user.
+        :param prompt: str -> prompt to send to the ui (message to display)
+        :return: str -> response from the user
+        """
+        return await self.__ui.request_next_message_async(prompt)
+
     def get_classifier(self):
         return self.__classifier
 

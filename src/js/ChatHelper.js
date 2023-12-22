@@ -57,6 +57,8 @@ function clear_chat() {
     }
 }
 
+let isPromptWaiting = false;
+
 function sendMessage() {
     const messageContainer = document.getElementById('message-container');
     const messageField = document.getElementById('message-input');
@@ -66,7 +68,26 @@ function sendMessage() {
     messageField.value = '';
     messageContainer.scrollTop = messageContainer.scrollHeight;
 
-    handleMessage(message);
+    if (!isPromptWaiting) {
+        handleMessage(message);
+        return;
+    }
+    // User answered a prompt
+    isPromptWaiting = false;
+    pywebview.api.prompt_response(message);
+}
+
+function set_prompt(message) {
+    pushMessage(message, 'ai');
+    isPromptWaiting = true;
+
+    // Enable input because user has to answer prompt
+    setUiDisabled(false);
+
+    // focus input field and scroll to bottom
+    const messageContainer = document.getElementById('message-container');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+    document.getElementById('message-input').focus();
 }
 
 document.addEventListener('keyup', function (event) {

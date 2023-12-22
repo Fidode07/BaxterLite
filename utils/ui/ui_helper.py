@@ -1,3 +1,5 @@
+import asyncio
+
 import webview
 
 from utils.config_helper import ConfigHelper
@@ -38,6 +40,8 @@ class Ui:
         self.__last_action: Union[str, None] = None
         self.__last_input: Union[str, None] = None
 
+        self.__callback: Union[Callable[[str], None], None] = None
+
     def close_current_ui(self) -> None:
         if self.__window:
             self.__window.destroy()
@@ -69,6 +73,47 @@ class Ui:
 
     def __build_last_trigger_data(self) -> TriggerInfos:
         return TriggerInfos(ui=self.__window, last_action=self.__last_action, last_input=self.__last_input)
+
+    def prompt_response(self, response: str) -> None:
+        """
+        This method is called from the ui when the user sends a message and request_next_message was called before
+        :param response: str -> response from the user
+        :return: None
+        """
+        if not self.__callback:
+            return
+        self.__callback(response)
+        self.__callback = None
+
+    async def request_next_message_async(self, prompt: str) -> str:
+        """
+        Instead of saving the callback, we are waiting for the response and return it
+        :param prompt: str -> prompt to send to the ui (message to display)
+        :return: str -> response from the user
+        """
+        response: Union[str, None] = None
+
+        def callback(r: str) -> None:
+            nonlocal response
+            response = r
+
+        self.__callback = callback
+
+        self.__window.evaluate_js(f'set_prompt(\'{prompt}\')')
+        # Wait while callback is not called
+        while not response:
+            await asyncio.sleep(0.1)
+        return response
+
+    def request_next_message(self, prompt: str, callback: Callable[[str], None]) -> None:
+        """
+        This method saves the callback and sends the prompt to the ui
+        :param prompt: str -> prompt to send to the ui (message to display)
+        :param callback: Callable[[str], None] -> callback to call when the user sends a message
+        :return: None
+        """
+        self.__callback = callback
+        self.__window.evaluate_js(f'set_prompt(\'{prompt}\')')
 
     def get_response(self, message: str) -> dict:
         """
