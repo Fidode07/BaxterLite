@@ -746,7 +746,11 @@
         "bitte öffne google.com",
         "kannst du bitte google.com öffnen",
         "öffne mal google.com",
-        "öffne bitte dasdaskdasd.com"
+        "öffne bitte dasdaskdasd.com",
+        "kannst du bitte mal google.com öffnen",
+        "kannste mal google.com öffnen",
+        "kannste mal bitte google.com öffnen",
+        "kannste mal google.com für mich öffnen"
       ],
       "responses": [
         "Ich habe die Seite {website} geöffnet.",

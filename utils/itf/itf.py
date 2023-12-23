@@ -10,6 +10,7 @@ import numpy as np
 import os
 from dataclasses import dataclass
 import random
+import requests
 
 keras.mixed_precision.set_global_policy('mixed_float16')
 
@@ -51,27 +52,30 @@ class TokenDetector:
         if not self.__max_token_length or not isinstance(self.__max_token_length, int):
             raise Exception('max_token_length is not set in config.json or is not an integer.')
         self.__intent_paths: List[str] = intent_paths
-        self.__dataset_url: str = ('https://cdn.discordapp.com/attachments/1057089742262509659/1178343410151727174'
-                                   '/webintents.json')
+        self.__dataset_urls: List[str] = [
+            # Dataset for: Ability to detect song names, artist names and if given in context, the platform
+            'https://cdn.discordapp.com/attachments/1082789914350989362/1188165120304627782/new-output-dataset.json',
+            # Dataset for: Ability to find out the domain in a sentence
+            'https://cdn.discordapp.com/attachments/1057089742262509659/1178343410151727174/webintents.json'
+        ]
 
     def is_usable(self) -> bool:
         return self.__token_detector is not None
 
-    def download_dataset(self) -> None:
+    def download_datasets(self) -> None:
         """
         Downloads the dataset from the dataset_url.
         :return: None
         """
-        import requests
-        import os
-        if os.path.isfile('datasets/itf/webintents.json'):
-            logging.info('Dataset already downloaded.')
-            return
-        logging.info('Downloading dataset ...')
-        os.makedirs('datasets/itf', exist_ok=True)
-        with open('datasets/itf/webintents.json', 'wb') as f:
-            f.write(requests.get(self.__dataset_url).content)
-        logging.info('Downloaded dataset.')
+        for dataset_url in self.__dataset_urls:
+            if os.path.isfile(dataset_url):
+                logging.info('Dataset already downloaded.')
+                continue
+            logging.info('Downloading dataset ...')
+            os.makedirs('datasets/itf', exist_ok=True)
+            with open(dataset_url, 'wb') as f:
+                f.write(requests.get(dataset_url).content)
+            logging.info('Downloaded dataset.')
 
     def get_important_parts(self, s: str) -> PositionPrediction:
         """
@@ -110,10 +114,11 @@ class TokenDetector:
         features: list = []
         labels: list = []
 
-        if not os.path.exists('datasets/itf/webintents.json') or len(self.__intent_paths) == 0:
-            self.download_dataset()
-            if 'datasets/itf/webintents.json' not in self.__intent_paths:
-                self.__intent_paths.append('datasets/itf/webintents.json')
+        if len(self.__intent_paths) == 0:
+            self.download_datasets()
+            for dataset_url in self.__dataset_urls:
+                if dataset_url not in self.__intent_paths:
+                    self.__intent_paths.append(dataset_url)
 
         # Load all datasets and append them to the features and labels list
         for intent_path in self.__intent_paths:
