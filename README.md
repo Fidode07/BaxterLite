@@ -273,7 +273,7 @@ The class contains the following functions:
     def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils, trigger_infos: TriggerInfos) -> str:
       def callback(input_str: str):
         print(input_str) # -> should be the user input (for e.g. if next message is "123" it should print "123")
-        action_utils.request_input('Please enter a number', callback) # -> displays "Please enter a number" in the chat and calls the callback function when the user sends the next message
+      action_utils.request_input('Please enter a number', callback) # -> displays "Please enter a number" in the chat and calls the callback function when the user sends the next message
   ```
 
 ### request_input_async(string) -> string
