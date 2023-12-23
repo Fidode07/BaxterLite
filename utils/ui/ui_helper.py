@@ -105,6 +105,14 @@ class Ui:
             await asyncio.sleep(0.1)
         return response
 
+    def send_message(self, message: str) -> None:
+        """
+        This method sends a message to the ui
+        :param message: str -> message to send
+        :return: None
+        """
+        self.__window.evaluate_js(f'pushMessage(\'{message}\', "ai")')  # -> It's a message from the AI
+
     def request_next_message(self, prompt: str, callback: Callable[[str], None]) -> None:
         """
         This method saves the callback and sends the prompt to the ui

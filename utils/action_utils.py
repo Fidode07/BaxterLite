@@ -45,6 +45,14 @@ class ActionUtils:
         """
         return await self.__ui.request_next_message_async(prompt)
 
+    def send_message(self, message: str) -> None:
+        """
+        This method sends a message to the ui
+        :param message: str -> message to send
+        :return: None
+        """
+        self.__ui.send_message(message)
+
     def get_classifier(self):
         return self.__classifier
 

@@ -13,11 +13,17 @@ class Message {
     }
 }
 
+function scrollDown() {
+    const messageContainer = document.getElementById('message-container');
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+}
+
 function pushMessage(message, sender) {
     const messageObject = new Message(message, sender);
     const messageContainer = document.getElementById('message-container');
 
     messageContainer.innerHTML += messageObject.getHtml();
+    scrollDown();
 }
 
 function setUiDisabled(disabled) {
@@ -43,8 +49,7 @@ function handleMessage(inputMessage) {
         setUiDisabled(false);
 
         // scroll to bottom
-        const messageContainer = document.getElementById('message-container');
-        messageContainer.scrollTop = messageContainer.scrollHeight;
+        scrollDown();
     });
 }
 
@@ -60,13 +65,13 @@ function clear_chat() {
 let isPromptWaiting = false;
 
 function sendMessage() {
-    const messageContainer = document.getElementById('message-container');
     const messageField = document.getElementById('message-input');
     let message = messageField.value;
     if (!message) return;
     pushMessage(message, 'user');
     messageField.value = '';
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    // scroll to bottom
+    scrollDown();
 
     if (!isPromptWaiting) {
         handleMessage(message);
@@ -85,8 +90,7 @@ function set_prompt(message) {
     setUiDisabled(false);
 
     // focus input field and scroll to bottom
-    const messageContainer = document.getElementById('message-container');
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    scrollDown();
     document.getElementById('message-input').focus();
 }
 
@@ -101,6 +105,5 @@ document.addEventListener('keyup', function (event) {
 
 // hold document scroll position always at bottom
 document.addEventListener('DOMContentLoaded', function () {
-    const messageContainer = document.getElementById('message-container');
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    scrollDown();
 });

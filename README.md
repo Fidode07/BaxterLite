@@ -289,6 +289,17 @@ The class contains the following functions:
   ```
   <strong>Note that the function must be asynchronous like described in the plugin section.</strong>
 
+### send_message(string) -> None
+  If you want to send a message to the chat, without returning it as a response, you can use this function. Here is an example:
+    
+  ```py
+  class GetRandomNumberAction:
+    @classmethod
+    def get_response(cls, input_str: str, main_str: str, error_str: str, action_utils: ActionUtils,
+                     trigger_infos: TriggerInfos) -> str:
+        action_utils.send_message('Please wait a moment...')  # -> displays "Please wait a moment..." in the chat
+  ```
+
 ### get_important_parts(string) -> PositionPrediction
 
   Returns PositionPrediction Class (contains for each important part start-idx and end-idx, if nothing found it will be
