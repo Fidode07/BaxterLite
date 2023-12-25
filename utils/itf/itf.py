@@ -2,15 +2,17 @@
 
 import json
 import logging
+import os
+import random
+from dataclasses import dataclass
+from typing import *
+
+import numpy as np
+import requests
+from tensorflow import keras
+
 from utils.config_helper import ConfigHelper
 from utils.string_helper import StringHelper
-from tensorflow import keras
-from typing import *
-import numpy as np
-import os
-from dataclasses import dataclass
-import random
-import requests
 
 keras.mixed_precision.set_global_policy('mixed_float16')
 
@@ -58,6 +60,7 @@ class TokenDetector:
             # Dataset for: Ability to find out the domain in a sentence
             'https://cdn.discordapp.com/attachments/1057089742262509659/1178343410151727174/webintents.json'
         ]
+        self.__max_entries_per_dataset: int = 170_000
 
     def is_usable(self) -> bool:
         return self.__token_detector is not None
@@ -102,6 +105,15 @@ class TokenDetector:
             return [labels[index][1], labels[index][2]]
         return [-1, -1]
 
+    def summary(self) -> None:
+        """
+        Prints a summary of the model.
+        :return: None
+        """
+        if self.__token_detector is None:
+            raise Exception('Token detector not trained yet. Please call train() first.')
+        self.__token_detector.summary()
+
     def train(self, epochs: int = 500, batch_size: int = 128, train_on_pretrained: bool = False) -> None:
         """
         Runs the training process of the token detector.
@@ -144,12 +156,10 @@ class TokenDetector:
                 to_extend: list = []
                 for i in range(3):
                     to_extend.extend(self.__get_part_info(label, i))
-                print(to_extend)
                 labels.append(np.array(to_extend))
                 features.append(
                     self.__str_helper.get_insertable(sentence, self.__max_token_length).astype(np.float32))
-                # break after 100 entries to speed up training
-                if idx > 165_000:
+                if idx > self.__max_entries_per_dataset:
                     break
             del dataset
 
@@ -177,10 +187,10 @@ class TokenDetector:
 
         # Create the model
         self.__token_detector: keras.Sequential = keras.Sequential([
-            keras.layers.LSTM(128, input_shape=(self.__max_token_length, self.__str_helper.get_dimensions()),
-                              return_sequences=True),
+            keras.layers.Bidirectional(keras.layers.LSTM(128, return_sequences=True),
+                                       input_shape=(self.__max_token_length, self.__str_helper.get_dimensions())),
             keras.layers.Dropout(0.2),
-            keras.layers.LSTM(128),
+            keras.layers.Bidirectional(keras.layers.LSTM(128)),
             keras.layers.Dropout(0.2),
             keras.layers.Dense(128, activation='relu'),
             keras.layers.Dense(6)
